@@ -17,7 +17,7 @@ std::shared_ptr<const CompilationUnit> ClassType::compilation_unit() const {
 }
 
 ClassTypePtr ClassType::create(
-    QualifiedName qualifiedName,
+    c10::optional<QualifiedName> qualifiedName,
     std::shared_ptr<CompilationUnit> cu,
     bool is_module) {
   return ClassTypePtr(new ClassType(std::move(qualifiedName), std::move(cu), is_module));
@@ -42,11 +42,19 @@ std::vector<Function*> ClassType::methods() const {
 }
 
 ClassType::ClassType(
-    QualifiedName name,
+    c10::optional<QualifiedName> name,
     std::shared_ptr<CompilationUnit> cu,
     bool is_module)
     : SerializableType(TypeKind::ClassType, std::move(name)),
       compilation_unit_(std::move(cu)),
       is_module_(is_module) {}
+
+c10::optional<std::string> ClassType::base_class_name() const {
+  return c10::nullopt;
+}
+
+std::vector<std::tuple<std::string, TypePtr>> ClassType::attrs() const {
+  return {};
+}
 
 } // namespace c10
